@@ -1,0 +1,12 @@
+version: 1
+sandbox:
+  name: compare-notes
+  description: Record the Python version used in the workspace.
+workspace:
+  source: .
+execution:
+  commands:
+    - id: record
+      run:
+        - python3
+        - record.py

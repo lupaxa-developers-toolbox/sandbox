@@ -1,0 +1,12 @@
+version: 1
+sandbox:
+  name: hello
+  description: Write one file in a copied project.
+workspace:
+  source: .
+execution:
+  commands:
+    - id: write
+      run:
+        - python3
+        - write.py

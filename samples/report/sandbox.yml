@@ -1,0 +1,20 @@
+version: 1
+sandbox:
+  name: report
+  description: Build a result file, then check it.
+workspace:
+  source: .
+execution:
+  stop_on_error: true
+  commands:
+    - id: build
+      run:
+        - python3
+        - build.py
+    - id: check
+      run:
+        - python3
+        - check.py
+outputs:
+  include:
+    - dist/**

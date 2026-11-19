@@ -1,0 +1,1 @@
+"""YAML recipes and configuration."""
