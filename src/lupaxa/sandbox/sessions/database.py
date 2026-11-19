@@ -82,23 +82,42 @@ class Database:
     def __init__(self, path: Path) -> None:
         self.path = path
         self._lock = threading.Lock()
-        self._conn = sqlite3.connect(path, check_same_thread=False)
+        self._conn: sqlite3.Connection | None = sqlite3.connect(path, check_same_thread=False)
         self._conn.row_factory = sqlite3.Row
         self._conn.execute("PRAGMA journal_mode=WAL")
         self._conn.execute("PRAGMA foreign_keys=ON")
         self._conn.executescript(_SCHEMA)
         self._conn.commit()
 
+    def close(self) -> None:
+        """Close the connection. Repeated calls do nothing."""
+        conn = getattr(self, "_conn", None)
+        self._conn = None
+        if conn is not None:
+            conn.close()
+
+    def __del__(self) -> None:
+        try:
+            self.close()
+        except Exception:
+            return
+
+    def _connection(self) -> sqlite3.Connection:
+        if self._conn is None:
+            raise sqlite3.ProgrammingError("The session database is closed.")
+        return self._conn
+
     @contextmanager
     def transaction(self) -> Iterator[sqlite3.Connection]:
         with self._lock:
+            conn = self._connection()
             try:
-                yield self._conn
-                self._conn.commit()
+                yield conn
+                conn.commit()
             except Exception:
-                self._conn.rollback()
+                conn.rollback()
                 raise
 
     def query(self, sql: str, params: tuple[object, ...] = ()) -> list[sqlite3.Row]:
         with self._lock:
-            return list(self._conn.execute(sql, params))
+            return list(self._connection().execute(sql, params))
