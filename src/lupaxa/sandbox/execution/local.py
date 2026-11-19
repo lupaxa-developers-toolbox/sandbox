@@ -179,7 +179,6 @@ class LocalBackend:
             process.wait()
         except KeyboardInterrupt:
             _terminate(process, grace_seconds)
-            reason = "interrupted"
             raise
         finally:
             for pump in pumps:

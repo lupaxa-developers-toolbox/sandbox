@@ -86,7 +86,7 @@ def test_second_execution_is_refused_while_one_is_running(tmp_path: Path) -> Non
                 sys.executable,
                 "-c",
                 "from pathlib import Path; Path('started').write_text('1'); "
-                "import time; time.sleep(30)",
+                + "import time; time.sleep(30)",
             ],
             data_dir=data,
             timeout_seconds=30,

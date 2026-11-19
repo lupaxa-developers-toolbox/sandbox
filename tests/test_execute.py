@@ -18,7 +18,7 @@ def test_captures_stdout_stderr_and_exit_code(tmp_path: Path) -> None:
             sys.executable,
             "-c",
             "import sys; sys.stdout.write('out\\n'); sys.stderr.write('err\\n'); "
-            "raise SystemExit(3)",
+            + "raise SystemExit(3)",
         ],
         cwd=tmp_path,
         timeout_seconds=30,

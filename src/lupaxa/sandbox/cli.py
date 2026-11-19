@@ -68,7 +68,7 @@ def _version(value: bool) -> None:
 
 @app.callback()
 def _root(
-    version: Annotated[
+    _version: Annotated[
         bool,
         typer.Option(
             "--version",
@@ -79,7 +79,6 @@ def _root(
     ] = False,
 ) -> None:
     """Run commands in a disposable workspace."""
-    del version
 
 
 @app.command(context_settings={"allow_interspersed_args": False})
